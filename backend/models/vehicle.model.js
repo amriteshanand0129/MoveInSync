@@ -37,28 +37,6 @@ const vehicleSchema = new mongoose.Schema(
       min: 1,
       max: 10,
     },
-    preferences: {
-      music: {
-        type: Boolean,
-        default: false,
-      },
-      air_conditioner: {
-        type: Boolean,
-        default: false,
-      },
-      pets: {
-        type: Boolean,
-        default: false,
-      },
-      smoking: {
-        type: Boolean,
-        default: false,
-      },
-      luggage: {
-        type: Boolean,
-        default: false,
-      },
-    },
     driver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

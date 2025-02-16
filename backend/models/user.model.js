@@ -81,6 +81,11 @@ const userSchema = new mongoose.Schema(
     vehicle: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vehicle",
+    },
+    ride_status: {
+      type: String,
+      default: "OFFLINE",
+      enum: ["RIDING", "OFFLINE"],
     }
   },
   {

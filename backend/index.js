@@ -1,14 +1,17 @@
 // Dependencies
-const cors = require('cors');
-const express = require('express');
-const logger = require('./logger');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const http = require("http");
+const cors = require("cors");
+const WebSocket = require("ws");
+const express = require("express");
+const logger = require("./logger");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
-// Database modules
-const auth_routes = require('./routes/auth.route');
-const vehicle_routes = require('./routes/vehicle.route');
+// Route handlers
+const auth_routes = require("./routes/auth.route");
+const vehicle_routes = require("./routes/vehicle.route");
+const ride_routes = require("./routes/ride.route");
 
 // Configurations
 const app = express();
@@ -21,17 +24,23 @@ require("dotenv").config();
 mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-    console.log('Connected to MongoDB');
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Connected to MongoDB");
 });
 
-// Routes handlers
 auth_routes(app);
 vehicle_routes(app);
+ride_routes(app);
+
+const PORT = process.env.PORT || 8080;
+const server = http.createServer(app);
+
+// Initialize WebSocket (Separate Module)
+const { initializeWebSocket } = require("./websocket"); 
+initializeWebSocket(server); 
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port: ${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
 });
