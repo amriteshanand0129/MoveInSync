@@ -118,6 +118,12 @@ const finishRide = async (req, res) => {
     ride.status = "RIDE_FINISHED";
     await ride.save();
 
+    const userUpdate = await user_model.findByIdAndUpdate(req.user._id, { ride_status: "OFFLINE" }, { session });
+
+    if (!userUpdate) {
+      throw new Error("Failed to update user's ride status");
+    }
+
     await session.commitTransaction();
     session.endSession();
 
